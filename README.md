@@ -1,80 +1,321 @@
 # Sistem Pakar Kerawanan Banjir Suatu Wilayah
 
-Program terminal Python 3.9+ dengan dua input: rata-rata curah hujan tahunan (mm/tahun) dan elevasi terhadap permukaan laut (meter). Skor akhir 1–5 memakai fuzzy Mamdani. Tidak perlu memasang paket pip.
+Sistem pakar berbasis Python yang menggunakan metode **Fuzzy Mamdani** untuk menilai kerawanan banjir berdasarkan **curah hujan tahunan** dan **elevasi**.
 
-## Menjalankan di terminal VS Code / PowerShell
+Program berjalan di terminal dan menghasilkan **skor kerawanan pada skala 1–5**. Hasil beberapa wilayah dapat dibandingkan dan diurutkan berdasarkan skor tertinggi.
 
-Buka folder hasil ekstraksi, lalu:
+## Fitur
+
+- Menghitung kerawanan satu atau beberapa wilayah.
+- Menampilkan skor dan tingkat kerawanan.
+- Menampilkan rincian perhitungan jika pengguna menginginkannya.
+- Menyediakan rumus dan penjelasan pada setiap tahap perhitungan.
+- Mengurutkan hasil berdasarkan prioritas kerawanan tertinggi.
+- Memvalidasi input angka dan jawaban pengguna.
+- Mendukung perintah `exit` pada setiap pertanyaan input.
+
+## Persyaratan
+
+- Python 3.9 atau versi lebih baru.
+- Terminal, seperti terminal VS Code atau PowerShell.
+
+Program hanya menggunakan pustaka bawaan Python sehingga **tidak memerlukan instalasi paket tambahan**.
+
+## File Proyek
+
+- `sistem_pakar_banjir.py`: kode utama untuk menjalankan sistem pakar.
+- `README.md`: panduan penggunaan dan penjelasan model.
+
+## Cara Menjalankan
+
+Buka terminal pada folder proyek, kemudian jalankan:
 
 ```powershell
 python sistem_pakar_banjir.py
 ```
 
-Jika Windows menggunakan Python Launcher:
+Jika menggunakan Python Launcher di Windows:
 
 ```powershell
 py sistem_pakar_banjir.py
 ```
 
-Langsung masukkan nama wilayah, curah hujan, lalu elevasi. Setelah hasil muncul, pilih y untuk menghitung kasus lain atau t untuk selesai. Satu wilayah saja diperbolehkan. Setelah selesai memasukkan kasus, program bertanya apakah hasil ingin diurutkan. Jika y, program menampilkan ranking dan kesimpulan semua wilayah dengan skor tertinggi. Semua hasil dihitung dan ditampilkan di terminal. Lebih dari satu wilayah menghasilkan ranking berdasarkan skor asli tanpa pembulatan. Tidak ada file data yang disimpan otomatis; output sesi muncul di terminal.
+Jika nama file kode diubah, sesuaikan nama file pada perintah tersebut.
 
-Contoh isian:
+## Cara Menggunakan
+
+1. Masukkan nama wilayah.
+2. Masukkan rata-rata curah hujan tahunan dalam **mm/tahun**.
+3. Masukkan elevasi terhadap permukaan laut dalam **meter**.
+4. Program menampilkan skor dan tingkat kerawanan.
+5. Pilih apakah ingin melihat rincian perhitungan.
+6. Pilih apakah ingin menghitung wilayah lain.
+7. Setelah selesai, pilih apakah hasil ingin diurutkan berdasarkan prioritas.
+
+Gunakan:
+
+- `y` untuk **ya**.
+- `t` untuk **tidak**.
+- `exit` untuk **langsung keluar**.
+
+Satu wilayah saja dapat dihitung. Perbandingan prioritas membutuhkan lebih dari satu hasil penilaian.
+
+## Contoh Penggunaan
+
+Masukkan data berikut:
 
 ```text
 Nama wilayah: Wilayah A
-Curah hujan: 2200
-Elevasi: 48
-Hitung wilayah lain? (y/t): t
-Urutkan hasil berdasarkan prioritas tertinggi? (y/t): y
+Curah hujan tahunan (mm/tahun): 2543
+Elevasi (meter): 32
 ```
 
-Hasil: skor sekitar **3,845745 / 5** atau **3,846** jika ditampilkan tiga desimal; label dominan **Tinggi**. Aturan aktif memiliki alfa 0,1; 0,1; 0,6; 0,4. Nomor aturan di program merujuk indeks dalam seluruh 25 aturan, sehingga berbeda dari penomoran empat aturan aktif pada penjelasan belajar.
+Hasil penilaiannya:
 
-Demo tanpa mengetik input:
-
-```powershell
-python sistem_pakar_banjir.py --demo
+```text
+Skor kerawanan    : 4.572 dari 5
+Tingkat kerawanan : Sangat tinggi
 ```
 
-## Validasi
+Contoh lain:
 
-- Huruf, kosong, NaN, infinity, dan format angka salah ditolak lalu diminta ulang.
-- Curah hujan harus >= 0; elevasi negatif diperbolehkan untuk lokasi di bawah permukaan laut.
-- Nama wilayah wajib terisi dan maksimum 24 karakter. Nama yang sama diperbolehkan untuk pengujian input berbeda.
-- Koma/titik diterima sebagai pemisah desimal. Jangan memakai pemisah ribuan: tulis **2200**, bukan **2.200** (2.200 dibaca 2,2).
-- Ctrl+C atau akhir input menghentikan program dengan pesan yang rapi.
+- Curah hujan **2200 mm/tahun** dan elevasi **48 meter** menghasilkan skor sekitar **3,846**, dengan tingkat kerawanan **tinggi**.
+- Curah hujan **2543 mm/tahun** dan elevasi **32 meter** menghasilkan skor sekitar **4,572**, dengan tingkat kerawanan **sangat tinggi**.
 
-## Basis pengetahuan dan asal angka
+Hasil dihitung dari input pengguna, bukan diambil dari daftar skor yang sudah tersedia.
 
-Acuan: Hutauruk dkk. (2020), *GIS-based Flood Susceptibility Mapping in Central Sulawesi*, Forum Geografi 34(2), DOI 10.23917/forgeo.v34i2.10667.
-https://journals.ums.ac.id/fg/article/view/10667/6268
+## Ketentuan Input
 
-Kategori hujan dari Tabel 2: <1000; 1000–1500; 1500–2000; 2000–2500; >2500 mm/tahun, skor kelas 1–5. Elevasi: <10; 10–50; 50–100; 100–200; >200 meter, skor kelas 5–1. Bobot jurnal hujan 15 dan elevasi 10.
+- Nama wilayah wajib diisi dan maksimal 24 karakter.
+- Nama yang sama dapat digunakan untuk mencoba input berbeda.
+- Curah hujan harus berupa angka yang tidak negatif.
+- Elevasi negatif diperbolehkan untuk wilayah di bawah permukaan laut.
+- Desimal dapat menggunakan titik atau koma, misalnya `48.5` atau `48,5`.
+- Jangan menggunakan pemisah ribuan: tulis **`2200`**, bukan **`2.200`**.
+- Input angka yang kosong, berupa huruf, `NaN`, atau infinity akan ditolak dan diminta ulang.
+- Jawaban pilihan harus `y` atau `t`.
+- Perintah `exit` tidak membedakan huruf besar dan kecil.
+- Keluar menggunakan `exit` tidak otomatis menampilkan ranking.
 
-Jurnal aslinya menggunakan enam faktor dengan scoring dan overlay GIS, bukan Mamdani. Program ini pengembangan pembelajaran dua faktor. Titik fuzzy, basis aturan, skala keluaran dan pelabelan hasil adalah rancangan yang belum divalidasi pakar atau data kejadian banjir. Jangan menyatakan aturan fuzzy ini tersedia dalam jurnal.
+## Cara Kerja Fuzzy Mamdani
 
-Puncak input hujan: 1000, 1250, 1750, 2250, 2500. Puncak elevasi: 10, 30, 75, 150, 200. Kategori tengah segitiga, dua ujung fungsi bahu. Titik nol kategori tengah adalah puncak tetangga. Di luar puncak ujung, kategori ujung memiliki keanggotaan penuh.
+### 1. Fuzzifikasi
 
-Keluaran memiliki puncak 1, 2, 3, 4, 5. Kategori keluaran adalah sangat rendah, rendah, sedang, tinggi, sangat tinggi. MAKA setiap aturan diusulkan dari q=(15*skor_kelas_hujan+10*skor_kelas_elevasi)/25, dibulatkan ke kategori terdekat. Perhitungan ini hanya menetapkan kategori aturan; skor pengguna dihitung melalui Mamdani.
+Program mengubah angka input menjadi derajat keanggotaan **μ**, dengan nilai antara **0 dan 1**.
 
-## Alur mesin inferensi
+Kategori curah hujan:
 
-1. Fuzzifikasi semua kategori dua input.
-2. Pilih aturan dengan keanggotaan > 0; AND menggunakan MIN.
-3. Potong keanggotaan fungsi MAKA sesuai alfa (MIN).
-4. Gabungkan keluaran aturan pada posisi skor sama (MAX).
-5. Centroid = integral z*mu(z) / integral mu(z).
-6. Integral numerik trapesium, 4000 interval/4001 titik, jarak 0,001.
-7. Label hasil: kategori keluaran dengan keanggotaan terbesar pada skor crisp; ikatan label ditampilkan bersama. Ini bukan ambang kategori akhir jurnal.
-8. Urutkan wilayah berdasarkan skor akhir terbesar. Skor yang sama mendapat prioritas sama (competition ranking: 1,1,3).
+- Sangat kering.
+- Kering.
+- Cukup basah.
+- Basah.
+- Sangat basah.
 
-Tabel titik berjarak 0,5 pada terminal hanya contoh penjelasan. Tabel itu **tidak** dipakai menghitung centroid; perhitungan memakai seluruh 4001 titik. Karena keluaran ujung berbentuk bahu dan dihitung dengan centroid, skor tidak harus mencapai persis 1 atau 5: pusat bahu penuh masing-masing mendekati 1,333 dan 4,667. Skala semesta keluarannya tetap 1–5.
+Kategori elevasi:
 
-Ini skor kerawanan model dua faktor, bukan persentase peluang banjir atau ramalan banjir harian.
+- Sangat rendah.
+- Rendah.
+- Sedang.
+- Tinggi.
+- Sangat tinggi.
 
-## Mengapa dua input?
+Kategori tengah menggunakan fungsi segitiga, sedangkan dua kategori ujung menggunakan fungsi bahu.
 
-Dua input menjaga model sesuai dengan alur yang sudah dipelajari, memerlukan data numerik yang lebih mudah disiapkan, dan cukup untuk demonstrasi 25 aturan. Enam faktor memberi cakupan lebih luas tetapi memerlukan data lereng, tanah, penggunaan lahan dan kepadatan drainase serta perancangan ulang basis pengetahuan. Python bisa menjalankan keduanya; pilihan jumlah faktor harus mengikuti tujuan dan ketersediaan data, bukan bahasa pemrograman. Penambahan faktor tidak otomatis membuat model lebih akurat tanpa validasi.
+Titik keanggotaan penuh curah hujan:
 
+- Sangat kering: input ≤1000 mm/tahun.
+- Kering: 1250 mm/tahun.
+- Cukup basah: 1750 mm/tahun.
+- Basah: 2250 mm/tahun.
+- Sangat basah: input ≥2500 mm/tahun.
 
-Hasil semua kasus disimpan dalam list selama sesi program. Ketika program ditutup, data sesi tidak disimpan permanen. Pertanyaan pengurutan muncul setelah pengguna memilih tidak menambah kasus. Centroid mengevaluasi 4.001 titik (1 sampai 5, langkah 0,001), bukan menjalankan 4.001 kali pembelajaran atau optimasi.
+Titik keanggotaan penuh elevasi:
+
+- Sangat rendah: input ≤10 meter.
+- Rendah: 30 meter.
+- Sedang: 75 meter.
+- Tinggi: 150 meter.
+- Sangat tinggi: input ≥200 meter.
+
+Pada kategori tengah, titik nol di kedua sisi menggunakan titik keanggotaan penuh kategori tetangga.
+
+Rumus bagian naik:
+
+```text
+μ(x) = (x − a) ÷ (b − a)
+```
+
+Rumus bagian turun:
+
+```text
+μ(x) = (c − x) ÷ (c − b)
+```
+
+Keterangan:
+
+- `x`: nilai input.
+- `a`: titik awal dengan keanggotaan 0.
+- `b`: titik puncak dengan keanggotaan 1.
+- `c`: titik akhir dengan keanggotaan 0.
+
+### 2. Menjalankan Aturan
+
+Basis pengetahuan terdiri dari **25 aturan JIKA–MAKA**, yaitu kombinasi lima kategori curah hujan dan lima kategori elevasi.
+
+Contoh aturan:
+
+> JIKA curah hujan sangat basah DAN elevasi rendah, MAKA kerawanan sangat tinggi.
+
+Kekuatan aturan **α** dihitung menggunakan:
+
+```text
+α = MIN(μ hujan; μ elevasi)
+```
+
+Artinya, sistem mengambil nilai keanggotaan terkecil dari kedua kondisi.
+
+Hanya aturan dengan **α > 0** yang aktif. Jumlah aturan aktif bergantung pada input pengguna.
+
+### 3. Pemotongan Keluaran
+
+Keanggotaan keluaran setiap aturan dibatasi sesuai kekuatan aturan:
+
+```text
+μ hasil aturan(z) = MIN(α; μ keluaran(z))
+```
+
+Keterangan:
+
+- `z`: posisi skor keluaran pada skala 1–5.
+- `α`: kekuatan aturan.
+- `μ keluaran(z)`: keanggotaan awal kategori keluaran.
+
+Nilai keanggotaan yang melebihi α dibatasi menjadi α. Nilai yang lebih kecil tetap seperti semula.
+
+### 4. Penggabungan Keluaran
+
+Keluaran semua aturan aktif digabungkan menggunakan **MAX** pada posisi skor yang sama:
+
+```text
+μ gabungan(z) = MAX(μ R1(z); μ R2(z); ...; μ Rn(z))
+```
+
+Artinya, sistem mengambil keanggotaan terbesar dari seluruh keluaran aturan setelah dipotong.
+
+Jumlah aturan dalam rumus mengikuti jumlah aturan yang aktif.
+
+### 5. Defuzzifikasi Centroid
+
+Program menghitung satu skor akhir menggunakan rumus:
+
+```text
+Skor akhir = [∫₁⁵ z × μ gabungan(z) dz] ÷ [∫₁⁵ μ gabungan(z) dz]
+```
+
+Keterangan:
+
+- **Luas:** integral keanggotaan gabungan.
+- **Momen:** integral posisi skor dikalikan keanggotaan gabungan.
+- **Skor akhir:** momen dibagi luas.
+
+Integral dihitung secara numerik menggunakan metode **trapesium**.
+
+Pengaturan perhitungan:
+
+- Rentang skor: **1–5**.
+- Jarak antartitik: **0,001**.
+- Jumlah interval: **4.000**.
+- Jumlah titik yang dihitung: **4.001**.
+
+Seluruh titik digunakan dalam perhitungan. Rincian terminal menampilkan rumus dan hasil integrasi tanpa menampilkan ribuan baris titik skor.
+
+### 6. Menentukan Tingkat Kerawanan
+
+Kategori keluaran memiliki titik puncak:
+
+- Sangat rendah: **1**.
+- Rendah: **2**.
+- Sedang: **3**.
+- Tinggi: **4**.
+- Sangat tinggi: **5**.
+
+Kategori tengah menggunakan fungsi segitiga, sedangkan kategori ujung menggunakan fungsi bahu pada rentang keluaran 1–5.
+
+Label hasil dipilih berdasarkan kategori yang memiliki **μ terbesar pada skor akhir**. Jika terdapat keanggotaan terbesar yang sama, kedua label ditampilkan.
+
+Karena skor dihitung menggunakan centroid, hasilnya tidak harus mencapai tepat 1 atau 5.
+
+## Rincian Perhitungan
+
+Pengguna dapat memilih apakah ingin melihat rincian setelah hasil utama ditampilkan.
+
+Rincian meliputi:
+
+1. Keanggotaan curah hujan dan elevasi beserta rumusnya.
+2. Aturan aktif dan kekuatan α.
+3. Dasar penetapan keluaran MAKA.
+4. Fungsi keluaran dan operasi pemotongan.
+5. Rumus penggabungan MAX.
+6. Ketelitian perhitungan dan jumlah titik.
+7. Rumus centroid serta hasil luas, momen, dan skor akhir.
+8. Dasar penentuan label tingkat kerawanan.
+
+Memilih untuk tidak menampilkan rincian **tidak mengubah perhitungan atau hasil skor**.
+
+## Pengurutan Prioritas
+
+Hasil setiap wilayah disimpan selama program berjalan.
+
+Setelah pengguna selesai memasukkan wilayah, program menanyakan apakah hasil ingin diurutkan.
+
+Jika pengguna memilih `y`:
+
+- Hasil diurutkan dari **skor terbesar ke terkecil**.
+- Pengurutan menggunakan nilai asli sebelum pembulatan.
+- Skor yang sama mendapatkan prioritas yang sama.
+- Program menampilkan kesimpulan wilayah dengan skor tertinggi.
+
+Jika hanya satu wilayah dimasukkan, program tetap dapat menampilkan hasilnya, tetapi belum ada wilayah pembanding.
+
+Data hanya disimpan selama sesi dan tidak disimpan permanen setelah program ditutup.
+
+## Sumber dan Dasar Rancangan
+
+Acuan kategori input dan bobot:
+
+Hutauruk dkk. (2020). *GIS-based Flood Susceptibility Mapping in Central Sulawesi*. Forum Geografi, 34(2).
+
+- [Artikel acuan](https://journals.ums.ac.id/fg/article/view/10667/6268)
+- DOI: `10.23917/forgeo.v34i2.10667`
+
+Jurnal menggunakan **scoring dan overlay GIS dengan enam faktor**, bukan Fuzzy Mamdani.
+
+Program ini mengadaptasi dua faktor:
+
+- Curah hujan tahunan.
+- Elevasi terhadap permukaan laut.
+
+Fungsi keanggotaan, aturan fuzzy, skala keluaran, dan pelabelan hasil merupakan rancangan pengembangan.
+
+Kategori MAKA diusulkan menggunakan skor kelas dan perbandingan bobot jurnal:
+
+```text
+q = (15 × skor kelas hujan + 10 × skor kelas elevasi) ÷ 25
+```
+
+Dasar penetapannya:
+
+- Bobot curah hujan: **15**.
+- Bobot elevasi: **10**.
+- Jumlah bobot: **25**.
+- Nilai q dibulatkan ke kategori keluaran terdekat.
+
+Rumus tersebut digunakan untuk menyusun basis aturan, **bukan menghitung skor akhir pengguna**. Skor akhir tetap dihitung melalui proses Mamdani dan centroid.
+
+## Batasan
+
+- Model ini merupakan proyek pembelajaran.
+- Fungsi keanggotaan dan basis aturan belum divalidasi oleh pakar atau data kejadian banjir.
+- Penilaian hanya mempertimbangkan curah hujan tahunan dan elevasi.
+- Faktor lain, seperti lereng, jenis tanah, penggunaan lahan, dan kepadatan drainase, belum digunakan.
+- Skor menunjukkan kerawanan menurut model dua faktor, **bukan persentase peluang banjir atau prediksi banjir harian**.
